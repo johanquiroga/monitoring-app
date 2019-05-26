@@ -7,7 +7,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
-const config = require('./config');
+const config = require('./lib/config');
 const app = require('./app');
 
 // Instantiate the HTTP server

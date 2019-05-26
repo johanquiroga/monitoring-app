@@ -2,11 +2,11 @@
  *  Define a requests router
  */
 
-const handlers = require('./handlers');
+const handlers = require('./lib/handlers');
 
 const router = {
   ping: handlers.ping,
-  hello: handlers.hello,
+  users: handlers.users,
 };
 
 module.exports = router;

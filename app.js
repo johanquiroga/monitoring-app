@@ -5,7 +5,8 @@
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 
-const handlers = require('./handlers');
+const helpers = require('./lib/helpers');
+const handlers = require('./lib/handlers');
 const router = require('./router');
 
 const app = (req, res) => {
@@ -43,7 +44,7 @@ const app = (req, res) => {
       queryString,
       method,
       headers,
-      payload: buffer,
+      payload: helpers.parseJsonToObject(buffer),
     };
 
     // Route the request to the handler specified in the router
