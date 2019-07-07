@@ -2,30 +2,24 @@
  * Primary file for the API
  */
 
-//  Dependency
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
+//  Dependencies
+const server = require('./lib/server');
+const workers = require('./lib/workers');
 
-const config = require('./lib/config');
-const app = require('./app');
+// Declare the app
 
-// Instantiate the HTTP server
-const httpServer = http.createServer(app);
+const app = {};
 
-// Start the HTTP server, and have it listen on defined port
-httpServer.listen(config.httpPort, () => {
-  console.log(`Server is listening on port ${config.httpPort}`);
-});
+// Init function
+app.init = () => {
+  // Start the server
+  server.init();
 
-// Instantiate the HTTPS server
-const httpsServerOptions = {
-  key: fs.readFileSync('./https/key.pem'),
-  cert: fs.readFileSync('./https/cert.pem'),
+  // Start the workers
+  workers.init();
 };
-const httpsServer = https.createServer(httpsServerOptions, app);
 
-// Start the HTTP server, and have it listen on defined port
-httpsServer.listen(config.httpsPort, () => {
-  console.log(`Server is listening on port ${config.httpsPort}`);
-});
+// Execute
+app.init();
+
+module.exports = app;
