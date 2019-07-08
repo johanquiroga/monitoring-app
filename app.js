@@ -4,8 +4,12 @@
 
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
+const util = require('util');
 
-const handlers = require('./handlers');
+const debug = util.debuglog('server');
+
+const helpers = require('./lib/helpers');
+const handlers = require('./lib/handlers');
 const router = require('./router');
 
 const app = (req, res) => {
@@ -43,7 +47,7 @@ const app = (req, res) => {
       queryString,
       method,
       headers,
-      payload: buffer,
+      payload: helpers.parseJsonToObject(buffer),
     };
 
     // Route the request to the handler specified in the router
@@ -56,8 +60,18 @@ const app = (req, res) => {
       res.writeHead(status);
       res.end(payloadString);
 
-      // Log the request path
-      console.log('Returning this response: ', status, payloadString);
+      // If the response is 200 print green, otherwise print red
+      if (status === 200) {
+        debug(
+          '\x1b[32m%s\x1b[0m',
+          `${method.toUpperCase()} /${trimmedPath} ${status}`
+        );
+      } else {
+        debug(
+          '\x1b[31m%s\x1b[0m',
+          `${method.toUpperCase()} /${trimmedPath} ${status}`
+        );
+      }
     });
   });
 };
