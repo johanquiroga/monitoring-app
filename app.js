@@ -4,6 +4,9 @@
 
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
+const util = require('util');
+
+const debug = util.debuglog('server');
 
 const helpers = require('./lib/helpers');
 const handlers = require('./lib/handlers');
@@ -57,8 +60,18 @@ const app = (req, res) => {
       res.writeHead(status);
       res.end(payloadString);
 
-      // Log the request path
-      console.log('Returning this response: ', status, payloadString);
+      // If the response is 200 print green, otherwise print red
+      if (status === 200) {
+        debug(
+          '\x1b[32m%s\x1b[0m',
+          `${method.toUpperCase()} /${trimmedPath} ${status}`
+        );
+      } else {
+        debug(
+          '\x1b[31m%s\x1b[0m',
+          `${method.toUpperCase()} /${trimmedPath} ${status}`
+        );
+      }
     });
   });
 };
